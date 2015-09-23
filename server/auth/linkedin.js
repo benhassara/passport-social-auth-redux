@@ -2,6 +2,7 @@ var User = require('../models/user');
 var config = require('../../oauth');
 var passport = require('passport');
 var LinkedInStrategy = require('passport-linkedin');
+var init = require('./init');
 
 passport.use(new LinkedInStrategy({
     consumerKey: config.linkedin.clientID,
@@ -9,7 +10,6 @@ passport.use(new LinkedInStrategy({
     callbackURL: config.linkedin.callbackURL
   },
   function(token, tokenSecret, profile, done) {
-    console.log(profile);
 
     var newUser = new User({
       name: 'bruce wayne',
@@ -33,14 +33,6 @@ passport.use(new LinkedInStrategy({
   }
 ));
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function (err, user) {
-    done(err, user);
-  });
-});
+init();
 
 module.exports = passport;
